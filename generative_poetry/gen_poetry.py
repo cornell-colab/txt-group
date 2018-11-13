@@ -87,7 +87,7 @@ def output_pos_cheat_sheet():
     ''')
     # source: https://medium.com/@gianpaul.r/tokenization-and-parts-of-speech-pos-tagging-in-pythons-nltk-library-2d30f70af13b
 
-def generate_poem_lib_style(tidy_tagged_tokens, user_recipe=None):
+def generate_poem_lib_style(tidy_tagged_tokens, user_recipe=None, chosen_recipe=0):
     words_by_pos = generate_words_by_pos(tidy_tagged_tokens)
     possible_recipes = [
         ['Hello', 'my', 't_JJ', 't_NNP', '\nI', 'wish', 'for', 'you', 'to', 't_VB', 't_NN'],
@@ -100,7 +100,7 @@ def generate_poem_lib_style(tidy_tagged_tokens, user_recipe=None):
         recipe = user_recipe
     else:
         # replace with randomness measure
-        recipe = possible_recipes[0]
+        recipe = possible_recipes[chosen_recipe]
     
     # now let's print out our poem
     working_poem = []
