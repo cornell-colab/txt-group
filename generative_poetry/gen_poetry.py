@@ -91,10 +91,9 @@ def generate_poem_lib_style(tidy_tagged_tokens, user_recipe=None, chosen_recipe=
     words_by_pos = generate_words_by_pos(tidy_tagged_tokens)
     possible_recipes = [
         ['Hello', 'my', 't_JJ', 't_NNP', '\nI', 'wish', 'for', 'you', 'to', 't_VB', 't_NN'],
-        [],
-        [],
-        []
-    ]
+        ['What', 'is', 't_VB', '?', '\nA', 't_NN'],
+        ['t_UH', 'my', 't_NN']]
+    
     
     if user_recipe:
         recipe = user_recipe
@@ -103,24 +102,26 @@ def generate_poem_lib_style(tidy_tagged_tokens, user_recipe=None, chosen_recipe=
         recipe = possible_recipes[chosen_recipe]
     
     # now let's print out our poem
-    working_poem = []
-    for item in recipe:
 
-        if 't_' in item:
-            pos = item[2:]
-            try:
-                matching_words = words_by_pos[pos]
-            except:
-                matching_words = ['.']
-            random_num = random.randint(0, len(matching_words) - 1)
-            output_word = matching_words[random_num]
-        else:
-            output_word = item
-        
-        working_poem.append(output_word)
-    print('\n')
-    print(' '.join(working_poem))
-    print('\n')
+    for r in possible_recipes:
+        working_poem = []
+        for item in r:
+
+            if 't_' in item:
+                pos = item[2:]
+                try:
+                    matching_words = words_by_pos[pos]
+                except:
+                    matching_words = ['.']
+                # matching_words = ['beautiful', 'cold', 'sad', 'grumpy', 'quick']
+                random_num = random.randint(0, len(matching_words) - 1)
+                output_word = matching_words[random_num]
+            else:
+                output_word = item
+            
+            working_poem.append(output_word)
+
+        print(' '.join(working_poem))
 
 
 def find_ngrams(tidy_tagged_tokens, search_term, ngram_span = 1):
