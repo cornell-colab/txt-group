@@ -7,39 +7,35 @@ from nltk.tokenize import sent_tokenize
 from nltk import ngrams
 
 word_pattern = re.compile(r"\w[\w\-\']*\w|\w")
-##This step creates a list that tokenizes and tags each sentence in CSV file. Count is equal to the row of the csv and part is equal to the sentence in that row##
-tidy_tagged_tokens = []
-with open(sys.argv[1]) as worktext:
-    reader = csv.reader(worktext)
-    count = 0
-    for row in reader:
 
-        line = row[int(sys.argv[2])]
-        sentence = sent_tokenize(line)
-        for part in range(0, len(sentence)):
-            tokens = word_pattern.findall(sentence[part])
-            tagged_words = nltk.pos_tag(tokens)
-            tidy_tagged_tokens.append([count, part, tagged_words])
-        count += 1
+# user input in command line after gen_poetry.py passed into text_file variable
+text_file = sys.argv[1]
+
+tidy_tagged_tokens = []
+with open(text_file) as worktext:
+    for line in worktext:
+        tokens = word_pattern.findall(line)
+        # consider adding .lower() to line - what effect might this have?
+        tagged_words = nltk.pos_tag(tokens)
+        for word in tagged_words:
+            tidy_tagged_tokens.append(word)
+        
 ttt = tidy_tagged_tokens
+
 
 def generate_words_by_pos(tidy_tagged_tokens):
     # create a new dictionary to store lists of words, arranged by POS
     words_by_post = {}
-    for entry in tidy_tagged_tokens:
-        # print(entry)
-        tokens = entry[2]
-        if len(tokens) > 0:
-            for token in tokens:
-                word = token[0]
-                pos = token[1]
-                
-                # if this is the first time we're seeing a specific POS, create new list with one item, our current word
-                if pos not in words_by_post:
-                    words_by_post[pos] = [word]
-                else:
-                    # otherwise, add the current word to our growing list for that POS
-                    words_by_post[pos].append(word)
+    for token in tidy_tagged_tokens:
+        word = token[0]
+        pos = token[1]
+        
+        # if this is the first time we're seeing a specific POS, create new list with one item, our current word
+        if pos not in words_by_post:
+            words_by_post[pos] = [word]
+        else:
+            # otherwise, add the current word to our growing list for that POS
+            words_by_post[pos].append(word)
 
     return words_by_post
 
@@ -127,5 +123,18 @@ def generate_poem_lib_style(tidy_tagged_tokens, user_recipe=None):
     print('\n')
 
 
-        
+def find_ngrams(tidy_tagged_tokens, search_term, ngram_span = 1):
+    ngram_phrases = []
+    for i in range(ngram_span, len(tidy_tagged_tokens) - ngram_span):
+        current_token = tidy_tagged_tokens[i]
+        word = current_token[0].lower()
+        if word == search_term:
+            all_indices_in_nram_range = range(i -ngram_span, i + ngram_span + 1)
+            ngram = []
+            for z in all_indices_in_nram_range:
+                ngram.append(tidy_tagged_tokens[z][0])
+            ngram_phrases.append(ngram)
+    
+    return ngram_phrases
+
 
