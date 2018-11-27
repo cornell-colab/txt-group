@@ -44,7 +44,7 @@ with open ("cssonnets.csv") as worktext:
 repl_model = model = Word2Vec(all_lines, size = 150,  min_count=5)
 
 #Exploring the Word2Vec Model#
-
+repl_model.wv.most_similar(positive = "string")
 #Word Substitution#
 Sample = glor_dat[3][2]
 Fresh_Sentence =[]
